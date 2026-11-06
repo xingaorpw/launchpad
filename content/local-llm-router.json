@@ -1,0 +1,21 @@
+{
+  "name": "local-llm-router",
+  "repo": "xingaorpw/local-llm-router",
+  "tagline": "按任务难度自动选模型，月底告诉你省了多少钱",
+  "problem": "大部分请求根本用不着最贵的模型。提取字段和设计架构是两件事，前者用最便宜的就能做对。但人懒得每次手动选，于是全部走默认——钱就这么花掉了。同一个请求走小模型和走推理模型，成本差 60 倍以上。",
+  "bullets": [
+    "6 类任务映射到 3 个档位，规则按优先级执行，命中即返回",
+    "每条判断都返回理由，explain 可以直接看，不是黑盒分类器",
+    "每次调用记进 SQLite，同时记录「如果全走 large 要花多少」",
+    "stats 直接算出省了多少钱和百分比，不用估算"
+  ],
+  "install": "python -m router explain \"帮我重构这段代码\"\npython -m router run \"帮我总结这段话\" --provider mock\npython -m router stats",
+  "example": "  任务类型      summarize（命中关键词 总结 → summarize）\n  档位          medium → gpt-4o\n  本次成本      $0.000122\n  全部走 large  $0.000490（省 $0.000367）\n\n  省下        $0.000919（60.1%）",
+  "limits": [
+    "分类是关键词启发式，会误判——「分析这段报错日志」会被判成最贵的档位",
+    "价格表写死在代码里，不会联网更新",
+    "Ollama 的档位是假的：本地模型不管哪档都是同一个模型"
+  ],
+  "tags": ["llm", "cost", "python", "tooling"],
+  "hashtags": ["#llm", "#cost optimization", "#python"]
+}

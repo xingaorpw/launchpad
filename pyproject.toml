@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "launchpad"
+version = "0.1.0"
+description = "把 GitHub 项目发到各平台，并自动向 awesome-list 投稿"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "xingaorpw" }]
+keywords = ["github", "promotion", "awesome-list", "devto", "bluesky", "cli"]
+dependencies = ["requests>=2.28"]
+
+[project.scripts]
+launchpad = "launchpad.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/xingaorpw/launchpad"
+
+[tool.setuptools.packages.find]
+include = ["launchpad*"]

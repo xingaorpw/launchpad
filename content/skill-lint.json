@@ -1,0 +1,21 @@
+{
+  "name": "skill-lint",
+  "repo": "xingaorpw/skill-lint",
+  "tagline": "给 AI agent 的 SKILL.md 做体检：触发词模糊、缺示例、多个 skill 抢同一个意图",
+  "problem": "Skill 写错了不会报错，只会让模型在该用的时候想不起来用。这个工具把「描述太短」「没有示例」「两个 skill 抢同一个意图」变成 10 条可检查的规则。",
+  "bullets": [
+    "10 条规则，覆盖 frontmatter、命名、描述长度、触发词、示例、正文体积",
+    "trigger-overlap：用 Jaccard 相似度检测两个 skill 是否在抢同一个意图",
+    "从 100 分扣分制，A–F 分级，可设阈值直接卡 CI",
+    "零依赖，node src/cli.js 直接跑，不需要 npm install"
+  ],
+  "install": "node src/cli.js ~/.claude/skills",
+  "example": "skill-lint · 共 5 个 skill\n\n  !  84 B  ~/.codex/skills/imagegen/SKILL.md\n      ! description-length     description 长度为 570，不在 20–200 区间\n      ! body-too-long          正文 18550 字符，超过 12000 字符的 token 预算线\n\n  ✗  72 C  ~/.codex/skills/openai-docs/SKILL.md\n      ✗ frontmatter-missing    缺少 frontmatter，agent 读不到 name 和 description\n\n──────────────────────────────────────────────────────────\n  平均分 77 · 不达标 3 个（阈值 80）",
+  "limits": [
+    "trigger-overlap 是关键词重叠，不是语义——用词完全不同但意思相同的检不出来",
+    "中文分词用 bigram，粗糙但够用，真分词会破坏零依赖",
+    "只认 SKILL.md 这个文件名"
+  ],
+  "tags": ["ai", "agents", "lint", "nodejs"],
+  "hashtags": ["#aiagents", "#llm", "#nodejs"]
+}

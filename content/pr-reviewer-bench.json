@@ -1,0 +1,22 @@
+{
+  "name": "pr-reviewer-bench",
+  "repo": "xingaorpw/pr-reviewer-bench",
+  "tagline": "给 AI code review 打分：用带人工评审意见的真实 PR 做基准",
+  "problem": "「AI 能 review 代码」现在是感觉，不是数据。你换了模型、改了提示词，感觉它变好了——但它真的多发现了几个 bug，还是只是话变多了？这个项目把「review 得好不好」拆成三个能算的东西。",
+  "bullets": [
+    "file_recall：人工意见提到的文件，reviewer 有没有看对地方",
+    "keyword_recall：人工意见里的关键问题词，reviewer 有没有说中",
+    "precision_proxy：reviewer 的意见有多少落在 diff 新增行范围内",
+    "总分 = 0.4 / 0.4 / 0.2，权重可解释，不是黑盒",
+    "内置 5 条种子 PR 和一个确定性 MockReviewer，用来验证评测流程本身"
+  ],
+  "install": "python -m bench run --dataset data/seed.jsonl --reviewer mock --out r.json\npython -m bench report r.json",
+  "example": "  pr-001     分数 0.00   文件 0.00   关键词 0.00   精准 0.00   0 条意见\n  pr-003     分数 0.82   文件 1.00   关键词 0.55   精准 1.00   2 条意见\n  pr-005     分数 0.84   文件 1.00   关键词 0.60   精准 1.00   3 条意见\n\n  平均分 0.492",
+  "limits": [
+    "种子数据只有 5 条，验证的是流程不是模型排名",
+    "keyword_recall 惩罚的是「用词不同」，不是「说错了」",
+    "不评估建议的正确性——说「这里有 bug」而其实没有，也能拿分"
+  ],
+  "tags": ["codereview", "llm", "benchmark", "python"],
+  "hashtags": ["#code review", "#llm", "#python"]
+}

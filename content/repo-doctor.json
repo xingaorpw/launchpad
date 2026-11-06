@@ -1,0 +1,21 @@
+{
+  "name": "repo-doctor",
+  "repo": "xingaorpw/repo-doctor",
+  "tagline": "给你的 GitHub 仓库做发布体检：13 项检查，缺什么一目了然",
+  "problem": "写完代码只是开始。有没有 LICENSE、有没有 Topics、README 里有没有安装命令和截图——这些才决定别人会不会 star 你，但没有人会告诉你漏了哪一件。repo-doctor 跑一次就全告诉你，还带分数。",
+  "bullets": [
+    "13 项检查按权重打分，加起来正好 100 分，可以手算",
+    "输出 A–F 等级和「下一步该补什么」，按严重程度排序",
+    "--fix 直接生成缺失的 LICENSE / .gitignore / CI / CONTRIBUTING",
+    "支持 --json 和 --min-score，可以直接卡在 CI 里当门禁"
+  ],
+  "install": "pip install -r requirements.txt\npython -m repo_doctor owner/repo",
+  "example": "  ✓  许可证         已声明 MIT                          +10\n  ✗  用法示例       README 里找不到用法示例              +0\n       ↳ 加一个 `## 用法`，贴一段真实运行输出\n  ✗  发布版本       没有 release                         +0\n\n  84 / 100   B    通过 10 / 13",
+  "limits": [
+    "只看「有没有」，不看「好不好」——README 里有个安装标题就算通过",
+    "权重是主观的，觉得不合理直接改 checks.py 里的数字",
+    "匿名限流 60 次/小时，一个仓库要调 4 次 API"
+  ],
+  "tags": ["github", "opensource", "python", "tooling"],
+  "hashtags": ["#opensource", "#python", "#github"]
+}

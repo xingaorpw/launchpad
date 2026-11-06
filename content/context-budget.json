@@ -1,0 +1,21 @@
+{
+  "name": "context-budget",
+  "repo": "xingaorpw/context-budget",
+  "tagline": "算出你的 AI agent 每轮对话被 skill 收了多少税",
+  "problem": "装 skill 的时候没人提醒你：每一个都会占上下文，而且每一轮对话都要付一次。装 128 个 skill，光描述就可能吃掉上万 token——你在为用不上的技能持续付费。",
+  "bullets": [
+    "扫 ~/.claude/skills、~/.codex/skills 等已知目录，每个子目录算一个 skill",
+    "token 估算用 CJK / 拉丁 / 代码块三套系数，误差约 ±15%",
+    "按 token 降序排，告诉你关掉最贵的三个能省多少",
+    "换算成每轮 / 100 轮 / 每天 100 轮一个月的量"
+  ],
+  "install": "node src/cli.js scan",
+  "example": "skill        文件数     字符   token  占窗口 %\n-----------  ------  -------  ------  --------\n.system          29  192,991  45,806    22.90%\nbeta-skill        1      851     743     0.37%\n\n共 4 个 skill，合计 46,885 token，占 200k 窗口的 23.44%\n\n  每轮可省 46,879 token（窗口的 23.44%）",
+  "limits": [
+    "估算是近似值，不同模型的 tokenizer 差别更大",
+    "只统计文件大小，不解析真实的 prompt 拼装顺序",
+    "不含 MCP 工具 schema——那部分通常比 skill 更占地方"
+  ],
+  "tags": ["ai", "llm", "tooling", "nodejs"],
+  "hashtags": ["#aiagents", "#contextwindow", "#nodejs"]
+}

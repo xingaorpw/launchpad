@@ -1,0 +1,21 @@
+{
+  "name": "paper-radar",
+  "repo": "xingaorpw/paper-radar",
+  "tagline": "arXiv 每日个性化雷达：从你的点赞里学偏好，只推你方向的新论文",
+  "problem": "arXiv 每天新增几百篇，关键词订阅已经烂大街——而且关键词不区分语境。我搜 retrieval，它给我推大气反演代码和分数陈绝缘体，因为摘要里都有这个词。真正有用的信号不是关键词本身，而是你对哪些关键词有反应。",
+  "bullets": [
+    "fetch / rate / digest / stats 四个命令，覆盖抓取、反馈、推荐、统计",
+    "画像 = 关键词权重 + 60 天半衰期，三个月前的偏好不该和昨天一样重",
+    "每条推荐都给出理由：「匹配关键词 agent / agents」",
+    "SQLite 本地存储，不联网也能看历史"
+  ],
+  "install": "python -m paper_radar fetch --query \"cat:cs.CL\" --max 50\npython -m paper_radar digest --top 5",
+  "example": "[1] 分数 10.96 | 2026-11-05 | cs.CL\n    Multimodal-SEA: Benchmarking AI Agent Security under Multimodal Social Engineering Attacks\n    理由：匹配关键词 agent / agents\n\n[2] 分数 10.20 | 2026-11-05 | cs.AI, cs.NE\n    SwarmEvolve: Latent Agent Swarms for Evolutionary Discovery and Optimization\n    理由：匹配关键词 agent / agents",
+  "limits": [
+    "纯关键词，没有语义——不知道「agent」和「智能体」是一回事",
+    "会学到噪声词，比如 first、environments 这种高频虚词",
+    "不读全文，没有引用图谱"
+  ],
+  "tags": ["arxiv", "research", "python", "machinelearning"],
+  "hashtags": ["#arxiv", "#machinelearning", "#python"]
+}
