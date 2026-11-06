@@ -63,10 +63,10 @@ class FakeGitHub:
 class TestContent(unittest.TestCase):
     def test_load_all_bundled_projects(self):
         projects = content.load_all()
-        self.assertEqual(len(projects), 6)
+        self.assertEqual(len(projects), 8)
         names = {p.name for p in projects}
-        self.assertIn("repo-doctor", names)
-        self.assertIn("skill-lint", names)
+        for expected in ("repo-doctor", "skill-lint", "Starscout", "skillhub"):
+            self.assertIn(expected, names)
 
     def test_every_project_has_required_fields(self):
         for project in content.load_all():

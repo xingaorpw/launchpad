@@ -1,0 +1,22 @@
+{
+  "name": "Starscout",
+  "repo": "xingaorpw/Starscout",
+  "tagline": "每日 GitHub 星探：按你的口味排序，你点 👍/👎/🔖，它当晚就调整明天的榜单",
+  "problem": "GitHub Trending 是所有人的榜单，不是你的。你关注的方向和大多数人不一样，但没人替你过滤——每天翻十页，找不出一个想 star 的。StarScout 从你的评分里学偏好，越用越准。",
+  "bullets": [
+    "完整闭环：采集 → 画像 → 排序 → 反馈 → 再画像，约 1800 行，单机可跑，不需要 GPU",
+    "排序 = 0.58×兴趣 + 0.27×质量 + 0.15×新颖度，权重写在代码里，想改就改",
+    "MMR 重排（λ=0.72）：避免一天推给你十个同类的 agent 框架",
+    "偏好带 45 天半衰期——三个月前的兴趣不该和昨天一样重",
+    "demo_learn.py 是对照实验：同一批数据跑学习前后两组榜单，直接看出它真的会学"
+  ],
+  "install": "pip install -r requirements.txt\npython run.py demo\npython run.py serve",
+  "example": "仓库 431 个 · 评分 6 条 · 画像置信度 24%\n\n口味（topic）：\n  ai-agents                +  2.0  ####\n  claude-code              +  2.0  ####\n  rag                      +  2.0  ####\n  websocket                -  1.0  ##\n\n如果现在推给你，会推这 8 个：\n   1. addyosmani/agent-skills    q=0.99  命中你的偏好 codex / claude-code，日均涨星约 431\n   2. google-gemini/gemini-cli   q=0.97  命中你的偏好 ai-agents，日均涨星约 192\n   6. langchain-ai/langchain     q=0.95  命中你的偏好 rag / llm，日均涨星约 101",
+  "limits": [
+    "要 20 条以上评分才明显变准，6 条的时候置信度只有 24%",
+    "冷启动靠 trending，新用户的第一屏和所有人一样",
+    "只学关键词，不懂语义——「agent」和「智能体」在它眼里是两个词"
+  ],
+  "tags": ["github", "recommender", "python", "machinelearning"],
+  "hashtags": ["#github", "#recommender"]
+}

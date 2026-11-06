@@ -1,0 +1,24 @@
+{
+  "name": "skillhub",
+  "repo": "xingaorpw/skillhub",
+  "tagline": "一个技能中心，所有 AI 工具、所有设备共用同一份 skill",
+  "problem": "Claude Code 认 ~/.claude/skills，Codex 认 ~/.codex/skills，Cursor、WorkBuddy 各有各的目录。同一份内容复制五六份，改了一处其余全过期；更麻烦的是每个技能的描述每轮对话都要付费，168 个技能约等于每轮白烧一万 token。",
+  "bullets": [
+    "单一来源：技能只存一份在 hub，工具目录里全是指向中心的链接（Windows junction / POSIX symlink）",
+    "上架 / 下架：技能留在中心但可以下架——链接消失、模型目录里不再出现，token 立刻省下来",
+    "成本可见：每个技能标注目录开销，首页有预算条、每轮/每天/每月换算、最贵技能排行",
+    "可视化控制台：五个视图、搜索筛选、SKILL.md 阅读器、Ctrl K 命令面板、拖拽导入",
+    "skillhub mcp 把整个中心暴露给任何 MCP 客户端，远端设备也能列技能、读技能、装技能",
+    "零依赖，零配置，node >= 18.17 直接跑"
+  ],
+  "install": "node src/cli.js init\nnode src/cli.js add ./my-skill\nnode src/cli.js serve",
+  "example": "skillhub v0.3.0 — one skill hub for every AI tool\n\nCOMMANDS\n  init [dir]              create a hub (default: ~/.skillhub)\n  add <source...>         install skills from GitHub or a local folder\n  list                    show skills, catalog cost and shelf state\n  enable <skill...>       put skills on the shelf (and link them)\n  disable <skill...>      take skills off the shelf (they stay in the hub)\n  tune [--budget N]       plan the shelf that fits a token budget\n  mcp                     run as an MCP server over stdio\n  doctor                  diagnose the hub, tools and links",
+  "limits": [
+    "符号链接需要权限：Windows 上非管理员只能建 junction，跨盘会失败",
+    "不合并冲突——两个工具都要同名但内容不同的 skill 时，只能留一个",
+    "MCP 服务是 stdio 的，不能多客户端同时连同一个进程",
+    "成本是估算值，不同 tokenizer 差别更大"
+  ],
+  "tags": ["ai", "agents", "skills", "nodejs"],
+  "hashtags": ["#aiagents", "#claude", "#nodejs"]
+}
