@@ -11,7 +11,7 @@
     "demo_learn.py 是对照实验：同一批数据跑学习前后两组榜单，直接看出它真的会学"
   ],
   "install": "pip install -r requirements.txt\npython run.py demo\npython run.py serve",
-  "example": "仓库 431 个 · 评分 6 条 · 画像置信度 24%\n\n口味（topic）：\n  ai-agents                +  2.0  ####\n  claude-code              +  2.0  ####\n  rag                      +  2.0  ####\n  websocket                -  1.0  ##\n\n如果现在推给你，会推这 8 个：\n   1. addyosmani/agent-skills    q=0.99  命中你的偏好 codex / claude-code，日均涨星约 431\n   2. google-gemini/gemini-cli   q=0.97  命中你的偏好 ai-agents，日均涨星约 192\n   6. langchain-ai/langchain     q=0.95  命中你的偏好 rag / llm，日均涨星约 101",
+  "example": "仓库 431 个 · 评分 6 条 · 反馈进度 24%\n\n口味（topic）：\n  ai-agents                +  2.0  ####\n  claude-code              +  2.0  ####\n  rag                      +  2.0  ####\n  websocket                -  1.0  ##\n\n如果现在推给你，会推这 8 个：\n   1. addyosmani/agent-skills    q=0.99  命中你的偏好 codex / claude-code，日均涨星约 431\n   2. google-gemini/gemini-cli   q=0.97  命中你的偏好 ai-agents，日均涨星约 192\n   6. langchain-ai/langchain     q=0.95  命中你的偏好 rag / llm，日均涨星约 101",
   "limits": [
     "要 20 条以上评分才明显变准，6 条的时候置信度只有 24%",
     "冷启动靠 trending，新用户的第一屏和所有人一样",
