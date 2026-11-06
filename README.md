@@ -147,10 +147,31 @@ python -m launchpad awesome submit --list vinta/awesome-python --project repo-do
 
 维护者会审，所以补丁必须干净：
 
-- **找对分节**：标题命中项目 tag 就选它，否则选条目最多的那一节
+- **找对分节**：标题命中项目 tag 才选它，否则**直接跳过**——插错分节的 PR 比不开 PR 更糟
+- **排除垃圾分节**：目录、赞助商、贡献指南、许可证、changelog 永远不插
+- **泛名分节加验相关性**：分节叫 "Tools" 这种到处都有的，还要列表本身跟项目相关才放行
 - **按字母序插入**：跟邻居保持一致的排序，而不是直接追加到末尾
-- **格式跟邻居一致**：`- [名字](链接) - 一句话`
 - **已收录就跳过**：不会重复开 PR
+
+### 真实扫描结果
+
+```
+$ python -m launchpad awesome scan --project repo-doctor --limit 6
+
+repo-doctor  ·  https://github.com/xingaorpw/repo-doctor
+  Hack-with-Github/Awesome-Hacking         ⭐124738  跳过（分节不匹配）
+  fighting41love/funNLP                    ⭐84420   跳过（分节不匹配）
+  lukasz-madon/awesome-remote-job          ⭐50392   跳过（分节不匹配）
+  github/awesome-copilot                   ⭐40855   跳过（分节不匹配）
+  abhisheknaiidu/awesome-github-profile-readme ⭐31534   可投稿
+  sdras/awesome-actions                    ⭐28406   可投稿
+
+  已收录 0 个，可投稿 2 个
+    sdras/awesome-actions  →  分节「GitHub Tools and Management」
+      - [repo-doctor](https://github.com/xingaorpw/repo-doctor) - 给你的 GitHub 仓库做发布体检
+```
+
+注意 **6 个里跳过了 4 个**。这是故意的——`awesome-remote-job` 有个叫 "Tools" 的分节，但那是招聘工具，跟仓库体检没关系。宁可不投，也不要发一个会被维护者拉黑的 PR。
 
 ### 注意
 

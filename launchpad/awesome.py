@@ -16,6 +16,16 @@ from .github import GitHub, GitHubError
 LIST_ITEM_RE = re.compile(r"^\s*[-*]\s+\[([^\]]+)\]\(([^)]+)\)")
 HEADING_RE = re.compile(r"^(#{2,4})\s+(.*)$")
 
+# 这些分节永远不该插条目：目录、赞助商、贡献指南、许可证
+BAD_SECTION_RE = re.compile(
+    r"contents|table of|toc|目录|索引|导航|sponsor|contribut|license|licence|"
+    r"acknowledg|footnote|changelog|credits|star history",
+    re.IGNORECASE,
+)
+
+# 这些分节名太泛，出现在任何列表里，单独命中不足以说明相关
+GENERIC_SECTIONS = {"tools", "tool", "resources", "misc", "other", "utilities", "general"}
+
 SEARCH_QUERIES = (
     "awesome {tag} in:name,description stars:>150",
     "awesome {language} in:name stars:>500",
@@ -46,18 +56,44 @@ def sections(lines: list[str]) -> list[dict[str, Any]]:
     return out
 
 
+def _norm(text: str) -> str:
+    return re.sub(r"[^a-z0-9\u4e00-\u9fff]", "", text.lower())
+
+
+def title_matches(title: str, keyword: str) -> bool:
+    """标题和关键词是否对得上。
+
+    做前缀比较是为了让 "Tools" 能匹配 "tooling"——不做的话大部分列表都匹配不上。
+    """
+    left, right = _norm(title), _norm(keyword)
+    if not left or not right:
+        return False
+    if right in left or left in right:
+        return True
+    return len(left) >= 4 and len(right) >= 4 and left[:4] == right[:4]
+
+
 def pick_section(readme: str, keywords: list[str]) -> dict[str, Any] | None:
-    """优先找标题命中关键词的分节，其次找条目最多的分节。"""
+    """只返回标题命中关键词的分节。
+
+    宁可返回 None 也不猜——插错分节的 PR 比不开 PR 更糟，维护者会记住你。
+    """
     lines = readme.splitlines()
     all_sections = sections(lines)
     if not all_sections:
         return None
 
-    lowered = [k.lower() for k in keywords if k]
+    lowered = [k for k in keywords if k]
+    matched = []
     for section in all_sections:
-        title = section["title"].lower()
-        if any(keyword in title for keyword in lowered):
-            return section
+        title = section["title"]
+        if BAD_SECTION_RE.search(title):
+            continue
+        if any(title_matches(title, keyword) for keyword in lowered):
+            matched.append(section)
+
+    if not matched:
+        return None
 
     def item_count(section: dict[str, Any]) -> int:
         return sum(
@@ -66,8 +102,7 @@ def pick_section(readme: str, keywords: list[str]) -> dict[str, Any] | None:
             if LIST_ITEM_RE.match(line)
         )
 
-    best = max(all_sections, key=item_count)
-    return best if item_count(best) > 0 else None
+    return max(matched, key=item_count)
 
 
 def suggest_patch(readme: str, project: Project) -> dict[str, Any] | None:
@@ -145,6 +180,23 @@ def scan(
 
             listed = is_listed(readme, project.url)
             patch = None if listed else suggest_patch(readme, project)
+
+            # 分节名叫 "Tools" 这种到处都有的，得看列表本身相不相关
+            if patch and _norm(patch["section"]) in GENERIC_SECTIONS:
+                # 先剥掉 URL——很多列表的 description 里写着 "inspired by github.com/..."，
+                # 那会让所有项目都误判成相关
+                desc = re.sub(r"https?://\S+", "", repo.get("description") or "")
+                blob = f"{full_name.rsplit('/', 1)[-1]} {desc}"
+                if not any(title_matches(blob, tag) for tag in project.tags):
+                    patch = None
+
+            if listed:
+                status = "已收录"
+            elif patch:
+                status = "可投稿"
+            else:
+                status = "跳过（分节不匹配）"
+
             found.append({
                 "repo": full_name,
                 "stars": repo.get("stargazers_count", 0),
@@ -154,8 +206,7 @@ def scan(
                 "line": (patch or {}).get("line"),
                 "patchable": patch is not None,
             })
-            progress(f"  {full_name:<40} ⭐{repo.get('stargazers_count', 0):<7} "
-                     f"{'已收录' if listed else ('可投稿' if patch else '找不到合适分节')}")
+            progress(f"  {full_name:<40} ⭐{repo.get('stargazers_count', 0):<7} {status}")
 
             if len(found) >= limit:
                 return found

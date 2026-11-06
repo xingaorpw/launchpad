@@ -202,9 +202,30 @@ class TestAwesome(unittest.TestCase):
         section = awesome.pick_section(SAMPLE_README, ["data"])
         self.assertEqual(section["title"], "Data")
 
-    def test_pick_section_falls_back_to_largest(self):
-        section = awesome.pick_section(SAMPLE_README, ["nonexistent"])
+    def test_pick_section_returns_none_without_keyword_match(self):
+        # 匹配不上就返回 None——插错分节比不开 PR 更糟
+        self.assertIsNone(awesome.pick_section(SAMPLE_README, ["nonexistent"]))
+
+    def test_pick_section_skips_table_of_contents(self):
+        readme = (
+            "# Awesome X\n\n## Table of Contents\n\n- [Tools](#tools)\n"
+            "- [a](https://github.com/a/b)\n\n## Tools\n\n- [black](https://github.com/psf/black) - fmt\n"
+        )
+        section = awesome.pick_section(readme, ["tooling"])
         self.assertEqual(section["title"], "Tools")
+
+    def test_pick_section_skips_sponsors_and_license(self):
+        for title in ("Sponsors", "Contributing", "License", "Changelog"):
+            readme = f"## {title}\n\n- [x](https://github.com/x/y) - z\n"
+            self.assertIsNone(awesome.pick_section(readme, ["tooling"]), title)
+
+    def test_title_matches_handles_plural_and_gerund(self):
+        self.assertTrue(awesome.title_matches("Tools", "tooling"))
+        self.assertTrue(awesome.title_matches("Python", "python"))
+        self.assertFalse(awesome.title_matches("Table of Contents", "tooling"))
+
+    def test_title_matches_cjk(self):
+        self.assertTrue(awesome.title_matches("中文工具", "工具"))
 
     def test_suggest_patch_inserts_alphabetically(self):
         patch = awesome.suggest_patch(SAMPLE_README, make_project("repo-doctor"))
